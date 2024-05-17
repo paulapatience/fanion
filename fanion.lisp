@@ -1,6 +1,6 @@
 ;;;; fanion.lisp — Exiguous command-line option parser
 ;;;;
-;;;; SPDX-FileCopyrightText: Copyright (c) 2023 Paul A. Patience <paul@apatience.com>
+;;;; SPDX-FileCopyrightText: Copyright (c) 2023-2024 Paul A. Patience <paul@apatience.com>
 ;;;; SPDX-License-Identifier: MIT
 
 ;;;* Package definition
@@ -138,8 +138,10 @@ ARGUMENTS."
                               do (setf (gethash (option-name option) result)
                                        (option-initial-value option))
                               finally (return result))
-          for subargs = arguments then (rest subargs) until (endp subargs)
-          for arg = (first subargs)
+          with arg
+          for subargs = arguments then (rest subargs)
+          until (endp subargs)
+          do (setf arg (first subargs))
           while (and (eql #\- (char arg 0)) (> (length arg) 1))
           if (eql #\- (char arg 1)) do
             (when (eql (length arg) 2)
